@@ -24,16 +24,40 @@ namespace URLShortener_BackEnd.Services
 
         public async Task<ShortUrl?> GetByShortCodeAsync(string shortUrl)
         {
-            var cachedUrl = await _redisDb.StringGetAsync(shortUrl);
-            if (!string.IsNullOrEmpty(cachedUrl))
+            try
             {
-                return new ShortUrl { ShortCode = shortUrl, OriginalUrl = cachedUrl };
-            }
+                if (_redisDb.Multiplexer.IsConnected)
+                {
+                    var cachedUrl = await _redisDb.StringGetAsync(shortUrl);
+                    if (!string.IsNullOrEmpty(cachedUrl))
+                    {
+                        return new ShortUrl { ShortCode = shortUrl, OriginalUrl = cachedUrl };
+                    }
+                }
 
+                else
+                {
+                    Console.WriteLine("[Redis Warning] Unable to connect Redis, using MongoDB.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Redis Error] Unable to read data from cache: {ex.Message}");
+            }
             var url = await _urlsCollection.Find(u => u.ShortCode == shortUrl).FirstOrDefaultAsync();
             if (url != null)
             {
-                await _redisDb.StringSetAsync(shortUrl, url.OriginalUrl);
+                try
+                {
+                    if (_redisDb.Multiplexer.IsConnected)
+                    {
+                        await _redisDb.StringSetAsync(shortUrl, url.OriginalUrl, TimeSpan.FromHours(1));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Redis Error] Unable to write data to cache: {ex.Message}");
+                }
             }
             return url;
         }
