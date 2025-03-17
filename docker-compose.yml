@@ -40,6 +40,7 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
+    command: redis-server --maxmemory 3319mb --maxmemory-policy allkeys-lru
 
 volumes:
   mongo_data:

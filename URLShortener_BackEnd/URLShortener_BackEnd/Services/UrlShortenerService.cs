@@ -51,7 +51,7 @@ namespace URLShortener_BackEnd.Services
                 {
                     if (_redisDb.Multiplexer.IsConnected)
                     {
-                        await _redisDb.StringSetAsync(shortUrl, url.OriginalUrl, TimeSpan.FromHours(1));
+                        await _redisDb.StringSetAsync(shortUrl, url.OriginalUrl, TimeSpan.FromHours(24));
                     }
                 }
                 catch (Exception ex)
