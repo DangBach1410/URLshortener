@@ -1,0 +1,34 @@
+[
+  {
+    "ContainingType": "URLShortener_BackEnd.Controllers.UrlShortenerController",
+    "Method": "RedirectToOriginalUrl",
+    "RelativePath": "{shortCode}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "shortCode",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "URLShortener_BackEnd.Controllers.UrlShortenerController",
+    "Method": "ShortenUrl",
+    "RelativePath": "shorten",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "URLShortener_BackEnd.Models.ShortUrl",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
