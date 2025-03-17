@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  backend:
+    build: 
+      context: ./URLShortener_BackEnd
+      dockerfile: Dockerfile
+    ports:
+      - "5168:5168"
+    environment:
+      - MongoDB__ConnectionString=mongodb://mongo:27017
+      - MongoDB__DatabaseName=UrlShortenerDB
+      - MongoDB__CollectionName=Urls
+      - Redis__Host=redis
+      - Redis__Port=6379
+      - ASPNETCORE_URLS=http://+:5168
+    depends_on:
+      - mongo
+      - redis
+
+  frontend:
+    build: 
+      context: ./URLShortener_FrontEnd
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo_data:
