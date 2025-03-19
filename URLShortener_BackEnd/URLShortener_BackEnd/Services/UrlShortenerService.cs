@@ -24,39 +24,31 @@ namespace URLShortener_BackEnd.Services
 
         public async Task<ShortUrl?> GetByShortCodeAsync(string shortUrl)
         {
-            try
+            if (_redisDb.Multiplexer.IsConnected)
             {
-                if (_redisDb.Multiplexer.IsConnected)
+                var cachedUrl = await _redisDb.StringGetAsync(shortUrl);
+                if (!string.IsNullOrEmpty(cachedUrl))
                 {
-                    var cachedUrl = await _redisDb.StringGetAsync(shortUrl);
-                    if (!string.IsNullOrEmpty(cachedUrl))
-                    {
-                        return new ShortUrl { ShortCode = shortUrl, OriginalUrl = cachedUrl };
-                    }
+                    Console.WriteLine("[Redis HIT]");
+                    return new ShortUrl { ShortCode = shortUrl, OriginalUrl = cachedUrl };
                 }
+            }
 
-                else
-                {
-                    Console.WriteLine("[Redis Warning] Unable to connect Redis, using MongoDB.");
-                }
-            }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"[Redis Error] Unable to read data from cache: {ex.Message}");
+                Console.WriteLine("[Redis Error] Unable to read data from cache.");
             }
+
             var url = await _urlsCollection.Find(u => u.ShortCode == shortUrl).FirstOrDefaultAsync();
             if (url != null)
             {
-                try
+                if (_redisDb.Multiplexer.IsConnected)
                 {
-                    if (_redisDb.Multiplexer.IsConnected)
-                    {
-                        await _redisDb.StringSetAsync(shortUrl, url.OriginalUrl, TimeSpan.FromHours(24));
-                    }
+                    await _redisDb.StringSetAsync(shortUrl, url.OriginalUrl, TimeSpan.FromHours(24));
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"[Redis Error] Unable to write data to cache: {ex.Message}");
+                    Console.WriteLine("[Redis Error] Unable to write data to cache.");
                 }
             }
             return url;

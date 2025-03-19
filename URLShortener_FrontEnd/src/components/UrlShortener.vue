@@ -30,7 +30,7 @@ export default {
         });
         this.shortUrl = `http://localhost:5168/${response.data.shortCode}`;
       } catch (error) {
-        console.error("Error shortening URL:", error);
+        alert("Error shortening URL:", error);
       }
     }
   }
