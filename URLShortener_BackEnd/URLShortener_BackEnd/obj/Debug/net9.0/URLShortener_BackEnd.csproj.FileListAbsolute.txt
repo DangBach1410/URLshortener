@@ -43,3 +43,4 @@ C:\URLShortener\URLShortener_BackEnd\URLShortener_BackEnd\obj\Debug\net9.0\refin
 C:\URLShortener\URLShortener_BackEnd\URLShortener_BackEnd\obj\Debug\net9.0\URLShortener_BackEnd.pdb
 C:\URLShortener\URLShortener_BackEnd\URLShortener_BackEnd\obj\Debug\net9.0\URLShortener_BackEnd.genruntimeconfig.cache
 C:\URLShortener\URLShortener_BackEnd\URLShortener_BackEnd\obj\Debug\net9.0\ref\URLShortener_BackEnd.dll
+C:\URLShortener\URLShortener_BackEnd\URLShortener_BackEnd\obj\Debug\net9.0\URLShortener_BackEnd.sourcelink.json

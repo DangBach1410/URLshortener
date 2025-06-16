@@ -53,6 +53,7 @@ namespace URLShortener_BackEnd.Controllers
                 httpClient.Timeout = TimeSpan.FromSeconds(5); // Set timeout to avoid long waits
 
                 var response = await httpClient.GetAsync(url);
+                Console.WriteLine(response);
                 return response.IsSuccessStatusCode; // Returns true if 200-299 status code
             }
             catch
